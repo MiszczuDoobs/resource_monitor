@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+  <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+</head>
+
+<title>{% block title %}{% endblock %} - Resource Monitor</title>
+
+<body>
+  <h1 id="cpu-percent">...loading...</h1>
+  <h1 id="memory">...loading...</h1>
+
+
+  <script type="text/javascript" charset="utf-8">
+    var socket = io();
+    var cpuUsage = document.getElementById('cpu-percent');
+    var temperature = document.getElementById('memory');
+
+
+    socket.on('connect', function () {
+      console.log('Connected')
+    })
+
+    socket.emit('handshake', 'handshake', function () {
+      console.log('Handshake received')
+    })
+
+    socket.on('performance_stats', function (data) {
+      cpuUsage.innerText = "CPU: " + data.cpu_usage + "%";
+      memory.innerText = "Memory: " + data.memory[2] + "%";
+    })
+
+  </script>
+</body>
+
+</html>
